@@ -1,0 +1,1250 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Examen Ética Profesional - Licenciatura en Educación</title>
+    <style>
+        :root {
+            --color-primary: #2d8a8a;
+            --color-primary-light: #4da1a1;
+            --color-primary-dark: #1f5f5f;
+            --color-accent: #e8753f;
+            --color-success: #27ae60;
+            --color-danger: #e74c3c;
+            --color-warning: #f39c12;
+            --color-bg: #f5f7fa;
+            --color-surface: #ffffff;
+            --color-text: #2c3e50;
+            --color-text-light: #7f8c8d;
+            --color-border: #ecf0f1;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--color-bg);
+            color: var(--color-text);
+            height: 100%;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* TIMER */
+        .timer-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: var(--color-surface);
+            padding: 15px 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            font-weight: bold;
+            font-size: 18px;
+            z-index: 1000;
+            display: none;
+            transition: all 0.3s ease;
+        }
+
+        .timer-container.active {
+            display: block;
+        }
+
+        .timer-container.warning-5min {
+            background-color: #fff3cd;
+            border: 2px solid var(--color-warning);
+            color: var(--color-warning);
+        }
+
+        .timer-container.warning-1min {
+            background-color: #f8d7da;
+            border: 2px solid var(--color-danger);
+            color: var(--color-danger);
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        /* SCREENS */
+        .screen {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* INITIAL SCREEN */
+        .initial-screen {
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+            color: white;
+            padding: 60px 40px;
+            border-radius: 16px;
+            text-align: center;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+        }
+
+        .initial-screen h1 {
+            font-size: 42px;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .initial-screen .program {
+            font-size: 14px;
+            opacity: 0.9;
+            margin-bottom: 40px;
+        }
+
+        .rules-section {
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 12px;
+            margin: 30px 0;
+            text-align: left;
+            backdrop-filter: blur(10px);
+        }
+
+        .rules-section h2 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .rules-list {
+            list-style: none;
+            font-size: 16px;
+            line-height: 1.8;
+        }
+
+        .rules-list li {
+            margin-bottom: 15px;
+            padding-left: 30px;
+            position: relative;
+        }
+
+        .rules-list li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+            color: #ffd700;
+            font-size: 20px;
+        }
+
+        .password-section {
+            background-color: var(--color-surface);
+            padding: 30px;
+            border-radius: 12px;
+            margin-top: 30px;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--color-text);
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid var(--color-border);
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+            font-family: inherit;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 3px rgba(45, 138, 138, 0.1);
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-primary {
+            background-color: var(--color-primary);
+            color: white;
+            width: 100%;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--color-primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(45, 138, 138, 0.3);
+        }
+
+        .btn-secondary {
+            background-color: var(--color-accent);
+            color: white;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .btn-secondary:hover {
+            background-color: #d6592f;
+            transform: translateY(-2px);
+        }
+
+        .error-message {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid var(--color-danger);
+        }
+
+        .info-message {
+            background-color: #cfe2ff;
+            color: #084298;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid var(--color-primary);
+        }
+
+        /* EXAM SCREEN */
+        .exam-header {
+            background-color: var(--color-surface);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .student-info h2 {
+            font-size: 24px;
+            color: var(--color-primary);
+            margin-bottom: 5px;
+        }
+
+        .student-info p {
+            color: var(--color-text-light);
+            font-size: 14px;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background-color: var(--color-border);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 30px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--color-primary), var(--color-accent));
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .question-container {
+            background-color: var(--color-surface);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            margin-bottom: 30px;
+        }
+
+        .question-number {
+            display: inline-block;
+            background-color: var(--color-primary);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+
+        .question-text {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--color-text);
+            margin-bottom: 25px;
+            line-height: 1.6;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .option {
+            display: flex;
+            align-items: center;
+            padding: 16px;
+            border: 2px solid var(--color-border);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            background-color: #fafafa;
+        }
+
+        .option:hover {
+            border-color: var(--color-primary);
+            background-color: rgba(45, 138, 138, 0.03);
+        }
+
+        .option input[type="radio"] {
+            margin-right: 15px;
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            accent-color: var(--color-primary);
+        }
+
+        .option label {
+            cursor: pointer;
+            flex: 1;
+            margin: 0;
+            font-weight: 500;
+        }
+
+        .option.correct {
+            background-color: #d4edda;
+            border-color: var(--color-success);
+        }
+
+        .option.incorrect {
+            background-color: #f8d7da;
+            border-color: var(--color-danger);
+        }
+
+        .feedback {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            display: none;
+            border-left: 4px solid;
+        }
+
+        .feedback.success {
+            display: block;
+            background-color: #d4edda;
+            border-color: var(--color-success);
+            color: #155724;
+        }
+
+        .feedback.error {
+            display: block;
+            background-color: #f8d7da;
+            border-color: var(--color-danger);
+            color: #721c24;
+        }
+
+        .feedback-title {
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .navigation {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+            justify-content: space-between;
+        }
+
+        .btn-nav {
+            flex: 1;
+            padding: 14px;
+        }
+
+        .btn-nav:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* BLOCKED SCREEN */
+        .blocked-screen {
+            background: linear-gradient(135deg, var(--color-danger) 0%, #c0392b 100%);
+            color: white;
+            padding: 60px 40px;
+            border-radius: 16px;
+            text-align: center;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+        }
+
+        .blocked-screen h1 {
+            font-size: 42px;
+            margin-bottom: 20px;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .blocked-screen p {
+            font-size: 18px;
+            margin-bottom: 30px;
+            opacity: 0.95;
+        }
+
+        /* RESULTS SCREEN */
+        .results-screen {
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+            color: white;
+            padding: 60px 40px;
+            border-radius: 16px;
+            text-align: center;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+        }
+
+        .results-screen h1 {
+            font-size: 36px;
+            margin-bottom: 30px;
+        }
+
+        .grade-display {
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 40px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            backdrop-filter: blur(10px);
+        }
+
+        .grade-number {
+            font-size: 72px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #ffd700;
+        }
+
+        .grade-label {
+            font-size: 18px;
+            opacity: 0.9;
+        }
+
+        .results-summary {
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            text-align: left;
+            backdrop-filter: blur(10px);
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            font-size: 18px;
+        }
+
+        .summary-item:last-child {
+            border-bottom: none;
+        }
+
+        .feedback-message {
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            font-size: 18px;
+            line-height: 1.6;
+            backdrop-filter: blur(10px);
+        }
+
+        .teacher-unlock {
+            background-color: var(--color-surface);
+            padding: 25px;
+            border-radius: 12px;
+            max-width: 400px;
+            margin: 30px auto 0;
+        }
+
+        .teacher-unlock p {
+            color: var(--color-text);
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+
+        @media (max-width: 768px) {
+            .timer-container {
+                top: 10px;
+                right: 10px;
+                font-size: 16px;
+                padding: 10px 15px;
+            }
+
+            .initial-screen,
+            .blocked-screen,
+            .results-screen {
+                padding: 40px 20px;
+            }
+
+            .initial-screen h1,
+            .blocked-screen h1 {
+                font-size: 28px;
+            }
+
+            .question-text {
+                font-size: 16px;
+            }
+
+            .exam-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="timer-container" id="timerContainer">
+        <span id="timerDisplay">20:00</span>
+    </div>
+
+    <!-- INITIAL SCREEN -->
+    <div class="screen active" id="initialScreen">
+        <div class="container">
+            <div class="initial-screen">
+                <h1>🎓 Examen Final</h1>
+                <p class="program">Ética Profesional | Licenciatura en Educación</p>
+                
+                <div class="rules-section">
+                    <h2>Reglas Importantes</h2>
+                    <ul class="rules-list">
+                        <li>El examen contiene <strong>20 preguntas</strong> de opción múltiple.</li>
+                        <li>Tiempo máximo: <strong>20 minutos</strong>.</li>
+                        <li>El examen solo se puede realizar <strong>una vez</strong>, salvo que un docente lo desbloquee.</li>
+                        <li>Después de cada respuesta recibirás <strong>retroalimentación inmediata</strong>.</li>
+                        <li>Tu calificación se verá reflejada al finalizar el examen.</li>
+                        <li>Asegúrate de leer cuidadosamente cada pregunta antes de responder.</li>
+                    </ul>
+                </div>
+
+                <div class="password-section">
+                    <div id="errorMessage"></div>
+                    <form id="passwordForm">
+                        <div class="form-group">
+                            <label for="studentName">Ingresa tu Nombre Completo:</label>
+                            <input type="text" id="studentName" required placeholder="Ej: Juan García López">
+                        </div>
+                        <div class="form-group">
+                            <label for="passwordInput">Contraseña de Alumno:</label>
+                            <input type="password" id="passwordInput" required placeholder="••••••••">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Comenzar Examen</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- BLOCKED SCREEN -->
+    <div class="screen" id="blockedScreen">
+        <div class="container">
+            <div class="blocked-screen">
+                <h1>🔒 Examen Bloqueado</h1>
+                <p>Este examen ya ha sido completado en este navegador.</p>
+                <p>Solo un docente puede desbloquear un nuevo intento.</p>
+                
+                <div class="password-section">
+                    <div id="teacherErrorMessage"></div>
+                    <form id="teacherUnlockForm">
+                        <div class="form-group">
+                            <label for="teacherPassword">Contraseña de Docente:</label>
+                            <input type="password" id="teacherPassword" required placeholder="••••••••">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Desbloquear Examen</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- EXAM SCREEN -->
+    <div class="screen" id="examScreen">
+        <div class="container">
+            <div class="exam-header">
+                <div class="student-info">
+                    <h2 id="studentNameDisplay">-</h2>
+                    <p>Ética Profesional | Examen Final</p>
+                </div>
+            </div>
+
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+
+            <div class="question-container" id="questionContainer">
+                <!-- Questions will be rendered here -->
+            </div>
+
+            <div class="navigation">
+                <button class="btn btn-secondary btn-nav" id="prevBtn">← Anterior</button>
+                <button class="btn btn-secondary btn-nav" id="nextBtn">Siguiente →</button>
+                <button class="btn btn-primary btn-nav" id="submitBtn" style="display:none;">Enviar Examen</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- RESULTS SCREEN -->
+    <div class="screen" id="resultsScreen">
+        <div class="container">
+            <div class="results-screen">
+                <h1>📊 Resultados del Examen</h1>
+                
+                <div class="grade-display">
+                    <div class="grade-number" id="finalGrade">0</div>
+                    <div class="grade-label">Calificación Final (Escala 0-10)</div>
+                </div>
+
+                <div class="results-summary">
+                    <div class="summary-item">
+                        <span>Nombre del Alumno:</span>
+                        <strong id="resultStudentName">-</strong>
+                    </div>
+                    <div class="summary-item">
+                        <span>Respuestas Correctas:</span>
+                        <strong id="correctCount">0</strong>
+                    </div>
+                    <div class="summary-item">
+                        <span>Respuestas Incorrectas:</span>
+                        <strong id="incorrectCount">0</strong>
+                    </div>
+                    <div class="summary-item">
+                        <span>Total de Preguntas:</span>
+                        <strong id="totalCount">20</strong>
+                    </div>
+                </div>
+
+                <div class="feedback-message" id="feedbackMessage">
+                    <!-- Personalized message will appear here -->
+                </div>
+
+                <div class="teacher-unlock">
+                    <p>¿Deseas permitir que un alumno repita el examen?</p>
+                    <div id="teacherResultsErrorMessage"></div>
+                    <form id="teacherResultsForm">
+                        <div class="form-group">
+                            <label for="teacherPasswordResults">Contraseña de Docente:</label>
+                            <input type="password" id="teacherPasswordResults" required placeholder="••••••••">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Permitir Nuevo Intento</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // CONSTANTS
+        const STUDENT_PASSWORD = 'alumno';
+        const TEACHER_PASSWORD = 'examen2025';
+        const TIMER_DURATION = 20 * 60; // 20 minutes in seconds
+        const TOTAL_QUESTIONS = 20;
+        const ATTEMPT_COUNTER_KEY = 'examAttemptCounter';
+        const STUDENT_NAME_KEY = 'examStudentName';
+
+        // QUESTIONS DATABASE
+        const questions = [
+            {
+                id: 1,
+                question: "Si la disciplina se enfoca en el estudio profundo de la conducta en base a valores, ¿a qué se reserva el uso del término para el comportamiento práctico del ser humano?",
+                options: [
+                    { text: "Para las formulaciones de la ética teológica y filosófica.", letter: "A" },
+                    { text: "Para la moralidad que incluye un sistema de tabúes y prohibiciones.", letter: "B" },
+                    { text: "Para el análisis abstracto de las llamadas ciencias de valores.", letter: "C" },
+                    { text: "Para el comportamiento en la práctica social del individuo.", letter: "D" }
+                ],
+                correct: "D",
+                explanation: "La ética se reserva específicamente para el comportamiento práctico del ser humano en la sociedad, distinguiéndose de las formulaciones teológicas o filosóficas puras."
+            },
+            {
+                id: 2,
+                question: "La disciplina que surge como un puente necesario entre el conocimiento técnico y las reflexiones humanísticas se denomina:",
+                options: [
+                    { text: "Bioética, un estudio interdisciplinario de conflictos biomédicos en varios niveles.", letter: "A" },
+                    { text: "Moral social, enfocada en la existencia de valores éticos para la sociedad.", letter: "B" },
+                    { text: "Ética aplicada, que busca solucionar controversias con principios universales.", letter: "C" },
+                    { text: "Deontología, analizando las obligaciones y deberes de los profesionales.", letter: "D" }
+                ],
+                correct: "A",
+                explanation: "La Bioética representa ese puente entre el conocimiento técnico y científico con las reflexiones humanísticas y éticas."
+            },
+            {
+                id: 3,
+                question: "Los valores fundamentales del modelo de principios para cimentar la disciplina incluyen el respeto por las personas, la justicia y:",
+                options: [
+                    { text: "La protección del secreto profesional y la absoluta santidad de la vida.", letter: "A" },
+                    { text: "La obligación de dar a cada quien su justo derecho y lo correspondiente.", letter: "B" },
+                    { text: "El deber de hacer el bien evitando activamente cualquier daño conocido.", letter: "C" },
+                    { text: "El foco en la calidad de vida y el núcleo axiológico de la persona humana.", letter: "D" }
+                ],
+                correct: "C",
+                explanation: "Los tres principios fundamentales son: respeto por las personas, justicia y beneficencia (hacer el bien evitando el daño)."
+            },
+            {
+                id: 4,
+                question: "El avance científico de la segunda mitad del siglo pasado transformó a las ciencias biológicas y médicas de un enfoque descriptivo y curativo hacia:",
+                options: [
+                    { text: "Herramientas de diagnóstico prenatal precoz y la discusión perenne del aborto.", letter: "A" },
+                    { text: "Poderosos instrumentos para manipular la vida humana y controlar el ambiente vital.", letter: "B" },
+                    { text: "Aplicaciones de terapia génica en células somáticas para tratar enfermedades.", letter: "C" },
+                    { text: "El fomento de la ética en relación con el ambiente ante la depredación.", letter: "D" }
+                ],
+                correct: "B",
+                explanation: "Los avances científicos transformaron las ciencias biológicas en herramientas poderosas para manipular la vida y el ambiente."
+            },
+            {
+                id: 5,
+                question: "Una forma de prejuicio considerada en los procedimientos de nuevas formas de generar vida, basada en el contenido cromosómico, es conocida como:",
+                options: [
+                    { text: "El riesgo de producir actitudes arrogantes si no hay un juicio sobre la ética.", letter: "A" },
+                    { text: "El dilema ético de la clonación con fines reproductivos o solo terapéuticos.", letter: "B" },
+                    { text: "La existencia de bancos de material genético que operan al margen de la ley.", letter: "C" },
+                    { text: "La discriminación por el componente genético, conocido como racismo cromosómico.", letter: "D" }
+                ],
+                correct: "D",
+                explanation: "El racismo cromosómico se refiere a la discriminación basada en el contenido genético de una persona."
+            },
+            {
+                id: 6,
+                question: "La distinción central entre la ética de la conducta laboral y la ética corporativa reside en que la primera se centra en la formación del individuo, mientras que la segunda orienta:",
+                options: [
+                    { text: "El desarrollo del ser humano en el ámbito de las actividades profesionales.", letter: "A" },
+                    { text: "Las decisiones de una organización para su responsabilidad ante la sociedad.", letter: "B" },
+                    { text: "La búsqueda de la rentabilidad y el cumplimiento estricto de obligaciones.", letter: "C" },
+                    { text: "El conjunto de normas y valores para el desarrollo de la sociedad.", letter: "D" }
+                ],
+                correct: "B",
+                explanation: "La ética corporativa se enfoca en las decisiones de la organización y su responsabilidad ante la sociedad."
+            },
+            {
+                id: 7,
+                question: "¿Cuál de los siguientes elementos NO representa una de las líneas estratégicas básicas de la Responsabilidad Social Empresarial?",
+                options: [
+                    { text: "La calidad de vida de los empleados en la organización y el entorno social.", letter: "A" },
+                    { text: "La maximización de utilidades para los inversionistas y el control total.", letter: "B" },
+                    { text: "El cuidado y la preservación del medioambiente para el futuro sostenible.", letter: "C" },
+                    { text: "La ética y la gobernabilidad empresarial en la gestión de la organización.", letter: "D" }
+                ],
+                correct: "B",
+                explanation: "La maximización de utilidades sin consideración por otros aspectos NO es una línea estratégica de la RSE; esta debe ser equilibrada."
+            },
+            {
+                id: 8,
+                question: "La gestión de las operaciones de una organización bajo la visión de la Responsabilidad Social Empresarial debe ser sustentable integralmente en tres ámbitos principales:",
+                options: [
+                    { text: "Los aspectos sociales, culturales y las políticas públicas externas.", letter: "A" },
+                    { text: "La rentabilidad económica, la dimensión social y lo ecológico.", letter: "B" },
+                    { text: "La dimensión económica interna, la legalidad y el buen gobierno.", letter: "C" },
+                    { text: "La honestidad, la transparencia y el cumplimiento de la ley.", letter: "D" }
+                ],
+                correct: "B",
+                explanation: "La sostenibilidad integral requiere equilibrio entre tres pilares: económico, social y ambiental (ecológico)."
+            },
+            {
+                id: 9,
+                question: "Dentro de las dimensiones de la responsabilidad empresarial, la económica interna se enfoca en asegurar la generación de utilidades y:",
+                options: [
+                    { text: "La aportación a la causa pública mediante la debida contribución impositiva.", letter: "A" },
+                    { text: "La prevención y remedio de los daños que pudieran causar sus procesos.", letter: "B" },
+                    { text: "La distribución del valor agregado entre los colaboradores y accionistas con equidad.", letter: "C" },
+                    { text: "La realización de acciones y aportaciones para favorecer el entorno de mercado.", letter: "D" }
+                ],
+                correct: "C",
+                explanation: "La responsabilidad económica interna incluye generar utilidades y distribuir equitativamente el valor agregado."
+            },
+            {
+                id: 10,
+                question: "El grupo de interés que se caracteriza por tener un acuerdo formal con la empresa, como una relación laboral o comercial, se clasifica como:",
+                options: [
+                    { text: "Grupos contextuales, debido a su papel en la credibilidad moral y la aceptación pública.", letter: "A" },
+                    { text: "Grupos consustanciales, porque su participación es imposible para la existencia del negocio.", letter: "B" },
+                    { text: "Grupos de vinculación, al requerir un diálogo para el cumplimiento de expectativas mutuas.", letter: "C" },
+                    { text: "Grupos contractuales, incluyendo a proveedores, clientes, directivos y empleados.", letter: "D" }
+                ],
+                correct: "D",
+                explanation: "Los grupos contractuales tienen acuerdos formales explícitos con la empresa: proveedores, clientes, empleados."
+            },
+            {
+                id: 11,
+                question: "Además de las autorizaciones financieras y las legales para la operación de una empresa, existe una tercera forma, quizás la más frágil, que es otorgada por:",
+                options: [
+                    { text: "La sociedad cuando percibe los bienes y servicios como pertinentes y convenientes.", letter: "A" },
+                    { text: "El gobierno corporativo cuando cumple con todos los requisitos de transparencia.", letter: "B" },
+                    { text: "Los grupos de interés contractuales mediante el cumplimiento de los acuerdos formales.", letter: "C" },
+                    { text: "Los altos directivos mediante la demostración de liderazgo ético y compromiso.", letter: "D" }
+                ],
+                correct: "A",
+                explanation: "La licencia social es otorgada por la sociedad cuando considera que la empresa es pertinente y conveniente."
+            },
+            {
+                id: 12,
+                question: "Los líderes de un estilo carismático que operan con una preocupación real por los demás y están guiados por principios, a menudo demuestran la característica ética de:",
+                options: [
+                    { text: "Buscar principalmente el refuerzo contingente y el intercambio justo de intereses.", letter: "A" },
+                    { text: "Concentrarse en el logro de resultados, aprovechando el poder que de ellos deriva.", letter: "B" },
+                    { text: "Colocar constantemente los intereses de otros antes que sus propios objetivos.", letter: "C" },
+                    { text: "Utilizar a los seguidores para cumplir con propósitos y metas personales (manipulación).", letter: "D" }
+                ],
+                correct: "C",
+                explanation: "El liderazgo ético carismático se caracteriza por priorizar los intereses de otros por encima de los propios."
+            },
+            {
+                id: 13,
+                question: "Dentro de los diferentes enfoques, el estilo que se considera más apropiado para fomentar una cultura moral sólida y el desarrollo ético de los seguidores es el:",
+                options: [
+                    { text: "Liderazgo transaccional, por su claridad en el intercambio y los beneficios mutuos.", letter: "A" },
+                    { text: "Liderazgo transformacional, gracias a su naturaleza carismática y visionaria.", letter: "B" },
+                    { text: "Liderazgo servidor, enfocado en las necesidades prioritarias y elevadas de otros.", letter: "C" },
+                    { text: "Liderazgo directivo, al enfocarse en el egoísmo ético para cumplir metas individuales.", letter: "D" }
+                ],
+                correct: "C",
+                explanation: "El liderazgo servidor es el más apropiado para desarrollar culturas morales sólidas, enfocándose en las necesidades de otros."
+            },
+            {
+                id: 14,
+                question: "La categoría de la teoría ética que considera si un acto es correcto basándose en la probabilidad de lograr los propósitos y metas personales del individuo es la:",
+                options: [
+                    { text: "Deontología de la regla, que sigue un conjunto de estándares predeterminados fijos.", letter: "A" },
+                    { text: "Ética de la virtud, enfocada en qué tipo de persona uno debería llegar a ser.", letter: "B" },
+                    { text: "Utilitarismo del acto, que busca el mayor bien para el mayor número de personas.", letter: "C" },
+                    { text: "Egoísmo ético, evaluando el cumplimiento de objetivos individuales del agente.", letter: "D" }
+                ],
+                correct: "D",
+                explanation: "El egoísmo ético evalúa la corrección de un acto basándose en si logra los objetivos personales del individuo."
+            },
+            {
+                id: 15,
+                question: "La ruta para implementar la Responsabilidad Social Empresarial que se define por la combinación del estudio de riesgos y la búsqueda de la convergencia de intereses de los grupos de relación es la:",
+                options: [
+                    { text: "Ruta de la oportunidad, al aprovechar el interés de un colaborador en un programa ya existente.", letter: "A" },
+                    { text: "Ruta analítica, la cual prioriza los intereses comunes para maximizar el éxito.", letter: "B" },
+                    { text: "Ruta estratégica, que se basa en políticas y programas a lo largo de todas las operaciones.", letter: "C" },
+                    { text: "Ruta de la gobernabilidad, enfocada en la dirección ética y el sistema corporativo.", letter: "D" }
+                ],
+                correct: "B",
+                explanation: "La ruta analítica combina el estudio de riesgos y la convergencia de intereses de los grupos de relación."
+            },
+            {
+                id: 16,
+                question: "Para el desarrollo sostenible, una regla fundamental sobre los recursos que no se regeneran establece que su explotación no debe exceder el ritmo necesario para:",
+                options: [
+                    { text: "Mantener la biodiversidad y la capacidad de absorción del medio ambiente.", letter: "A" },
+                    { text: "Lograr el reemplazo efectivo por un recurso renovable utilizado sosteniblemente.", letter: "B" },
+                    { text: "Evitar la producción de contaminantes que no puedan ser neutralizados o reciclados.", letter: "C" },
+                    { text: "Asegurar que las generaciones futuras mantengan un nivel de consumo alto.", letter: "D" }
+                ],
+                correct: "B",
+                explanation: "La regla fundamental es que la explotación no supere el ritmo de reemplazo por recursos renovables sostenibles."
+            },
+            {
+                id: 17,
+                question: "Las éticas que parten del uso del lenguaje comunicativo, expanden la noción de razón diferenciándola en dos formas: la racionalidad instrumental y la:",
+                options: [
+                    { text: "Racionalidad teleológica, basada en las consecuencias benéficas para todos.", letter: "A" },
+                    { text: "Racionalidad estética-expresiva, práctica-moral y cognitivo-instrumental.", letter: "B" },
+                    { text: "Racionalidad neocontractualista, centrada en la autonomía y la justicia como equidad.", letter: "C" },
+                    { text: "Racionalidad neoaristotélica, que privilegia la historia y la tradición sobre el consenso.", letter: "D" }
+                ],
+                correct: "B",
+                explanation: "La ética comunicativa expande la razón distinguiendo entre racionalidad instrumental y estética-expresiva, práctica-moral y cognitivo-instrumental."
+            },
+            {
+                id: 18,
+                question: "Las posturas que critican la tradición racionalista, como las éticas comunitaristas, privilegian la resolución de los dilemas morales a través de un énfasis en:",
+                options: [
+                    { text: "La adopción de un punto de vista completamente objetivo externo al entramado social.", letter: "A" },
+                    { text: "La educación en actitudes y hábitos válidos, enfocados en la formación del carácter moral.", letter: "B" },
+                    { text: "El fortalecimiento de la autonomía y la libertad de la persona, inherentes al liberalismo.", letter: "C" },
+                    { text: "La separación moderna entre el concepto de lo que se considera justo y lo que se considera bueno.", letter: "D" }
+                ],
+                correct: "B",
+                explanation: "La ética comunitarista enfatiza la educación en actitudes, hábitos y la formación del carácter moral."
+            },
+            {
+                id: 19,
+                question: "La reflexión con alcances normativos que busca la coincidencia universal de pautas comunes para el comportamiento ético en una sociedad plural se define como:",
+                options: [
+                    { text: "Ética cívica, cuyo objetivo principal es el consenso fáctico en torno a valores de tolerancia.", letter: "A" },
+                    { text: "Ética ciudadana, que debe establecer las conductas a las que todos están obligados.", letter: "B" },
+                    { text: "Ética aplicada, que resuelve problemas teóricos planteados por la práctica social.", letter: "C" },
+                    { text: "Ética pública, que asegura que el valor de lo bueno y justo sea un derecho humano.", letter: "D" }
+                ],
+                correct: "B",
+                explanation: "La ética ciudadana busca pautas comunes para el comportamiento ético en sociedades plurales."
+            },
+            {
+                id: 20,
+                question: "El tipo de grupo de interés que resulta crucial para obtener la credibilidad y la aceptación de las actividades de una empresa (licencia moral para operar) se denomina:",
+                options: [
+                    { text: "Grupos contractuales, incluyendo a los proveedores, clientes y colaboradores.", letter: "A" },
+                    { text: "Grupos consustanciales, como los inversionistas y los asociados de la firma.", letter: "B" },
+                    { text: "Grupos de gestión, que están implicados en el monitoreo del riesgo corporativo.", letter: "C" },
+                    { text: "Grupos contextuales, como el medioambiente, la comunidad y las autoridades.", letter: "D" }
+                ],
+                correct: "D",
+                explanation: "Los grupos contextuales (comunidad, autoridades, ambiente) son cruciales para obtener la credibilidad y licencia social."
+            }
+        ];
+
+        // STATE
+        let currentQuestion = 0;
+        let answers = {};
+        let timerInterval = null;
+        let timeRemaining = TIMER_DURATION;
+        let studentName = '';
+        let examStarted = false;
+
+        // DOM ELEMENTS
+        const initialScreen = document.getElementById('initialScreen');
+        const blockedScreen = document.getElementById('blockedScreen');
+        const examScreen = document.getElementById('examScreen');
+        const resultsScreen = document.getElementById('resultsScreen');
+        const timerContainer = document.getElementById('timerContainer');
+        const timerDisplay = document.getElementById('timerDisplay');
+        const passwordForm = document.getElementById('passwordForm');
+        const studentNameInput = document.getElementById('studentName');
+        const passwordInput = document.getElementById('passwordInput');
+        const errorMessageDiv = document.getElementById('errorMessage');
+        const teacherUnlockForm = document.getElementById('teacherUnlockForm');
+        const teacherPasswordInput = document.getElementById('teacherPassword');
+        const teacherErrorMessage = document.getElementById('teacherErrorMessage');
+
+        // UTILITY FUNCTIONS
+        function getAttemptCounter() {
+            const counter = localStorage.getItem(ATTEMPT_COUNTER_KEY);
+            return counter ? parseInt(counter) : 0;
+        }
+
+        function setAttemptCounter(value) {
+            localStorage.setItem(ATTEMPT_COUNTER_KEY, value.toString());
+        }
+
+        function showScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(screen => {
+                screen.classList.remove('active');
+            });
+            screenId.classList.add('active');
+        }
+
+        function startTimer() {
+            timerContainer.classList.add('active');
+            timerInterval = setInterval(() => {
+                timeRemaining--;
+                updateTimerDisplay();
+
+                if (timeRemaining === 300) { // 5 minutes
+                    timerContainer.classList.add('warning-5min');
+                    playWarningSound();
+                }
+
+                if (timeRemaining === 60) { // 1 minute
+                    timerContainer.classList.remove('warning-5min');
+                    timerContainer.classList.add('warning-1min');
+                    playWarningSound();
+                }
+
+                if (timeRemaining <= 0) {
+                    clearInterval(timerInterval);
+                    finishExam();
+                }
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timeRemaining / 60);
+            const seconds = timeRemaining % 60;
+            timerDisplay.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        function playWarningSound() {
+            // Create a simple beep using Web Audio API
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.frequency.value = 800;
+            oscillator.type = 'sine';
+            
+            gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+            
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + 0.5);
+        }
+
+        function renderQuestion(index) {
+            const question = questions[index];
+            const container = document.getElementById('questionContainer');
+            const answered = answers[index] !== undefined;
+            const selectedAnswer = answers[index];
+
+            let optionsHTML = '';
+            question.options.forEach(option => {
+                const isSelected = selectedAnswer === option.letter;
+                const isCorrect = option.letter === question.correct;
+                let optionClass = '';
+
+                if (answered) {
+                    if (isCorrect) optionClass = 'correct';
+                    if (isSelected && !isCorrect) optionClass = 'incorrect';
+                }
+
+                const checkedAttr = isSelected ? 'checked' : '';
+                optionsHTML += `
+                    <label class="option ${optionClass}">
+                        <input type="radio" name="answer" value="${option.letter}" ${checkedAttr} ${answered ? 'disabled' : ''}>
+                        <label for="option-${option.letter}"><strong>${option.letter}.</strong> ${option.text}</label>
+                    </label>
+                `;
+            });
+
+            let feedbackHTML = '';
+            if (answered) {
+                const isCorrect = selectedAnswer === question.correct;
+                const feedbackClass = isCorrect ? 'success' : 'error';
+                const feedbackTitle = isCorrect ? '✓ ¡Correcto!' : '✗ Incorrecto';
+                feedbackHTML = `
+                    <div class="feedback ${feedbackClass}">
+                        <div class="feedback-title">${feedbackTitle}</div>
+                        <p><strong>Explicación:</strong> ${question.explanation}</p>
+                    </div>
+                `;
+            }
+
+            container.innerHTML = `
+                <div class="question-number">Pregunta ${index + 1} de ${TOTAL_QUESTIONS}</div>
+                <div class="question-text">${question.question}</div>
+                <div class="options">
+                    ${optionsHTML}
+                </div>
+                ${feedbackHTML}
+            `;
+
+            // Add event listeners to options
+            if (!answered) {
+                document.querySelectorAll('input[name="answer"]').forEach(radio => {
+                    radio.addEventListener('change', (e) => {
+                        answers[index] = e.target.value;
+                        renderQuestion(index);
+                    });
+                });
+            }
+
+            updateProgressBar();
+            updateNavigationButtons();
+        }
+
+        function updateProgressBar() {
+            const progress = ((currentQuestion + 1) / TOTAL_QUESTIONS) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+        }
+
+        function updateNavigationButtons() {
+            document.getElementById('prevBtn').disabled = currentQuestion === 0;
+            document.getElementById('nextBtn').disabled = currentQuestion === TOTAL_QUESTIONS - 1;
+
+            if (currentQuestion === TOTAL_QUESTIONS - 1) {
+                document.getElementById('nextBtn').style.display = 'none';
+                document.getElementById('submitBtn').style.display = 'block';
+            } else {
+                document.getElementById('nextBtn').style.display = 'block';
+                document.getElementById('submitBtn').style.display = 'none';
+            }
+        }
+
+        function calculateGrade() {
+            let correct = 0;
+            for (let i = 0; i < TOTAL_QUESTIONS; i++) {
+                if (answers[i] === questions[i].correct) {
+                    correct++;
+                }
+            }
+            return (correct / TOTAL_QUESTIONS) * 10;
+        }
+
+        function finishExam() {
+            clearInterval(timerInterval);
+            const grade = calculateGrade();
+            const correct = Object.keys(answers).filter(i => answers[i] === questions[i].correct).length;
+
+            document.getElementById('resultStudentName').textContent = studentName;
+            document.getElementById('finalGrade').textContent = grade.toFixed(2);
+            document.getElementById('correctCount').textContent = correct;
+            document.getElementById('incorrectCount').textContent = TOTAL_QUESTIONS - correct;
+
+            let feedbackMessage = '';
+            if (grade > 7) {
+                feedbackMessage = `¡Felicidades ${studentName}! 🎉<br>Obtuviste una excelente calificación de <strong>${grade.toFixed(2)}/10</strong>. Tu desempeño refleja una sólida comprensión de los conceptos de ética profesional.`;
+            } else {
+                feedbackMessage = `${studentName}, tu calificación fue de <strong>${grade.toFixed(2)}/10</strong>. 💪<br>Te animamos a reforzar tus conocimientos en ética profesional. Recuerda que cada intento es una oportunidad de aprendizaje.`;
+            }
+
+            document.getElementById('feedbackMessage').innerHTML = feedbackMessage;
+
+            showScreen(resultsScreen);
+            setAttemptCounter(2);
+        }
+
+        // EVENT LISTENERS
+        passwordForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const name = studentNameInput.value.trim();
+            const password = passwordInput.value;
+
+            if (!name) {
+                errorMessageDiv.innerHTML = '<div class="error-message">Por favor ingresa tu nombre completo.</div>';
+                return;
+            }
+
+            if (password !== STUDENT_PASSWORD) {
+                errorMessageDiv.innerHTML = '<div class="error-message">Contraseña incorrecta. Intenta nuevamente.</div>';
+                return;
+            }
+
+            studentName = name;
+            document.getElementById('studentNameDisplay').textContent = `Examen de ${name}`;
+            localStorage.setItem(STUDENT_NAME_KEY, name);
+
+            setAttemptCounter(2);
+            examStarted = true;
+            renderQuestion(0);
+            showScreen(examScreen);
+            startTimer();
+        });
+
+        document.getElementById('prevBtn').addEventListener('click', () => {
+            if (currentQuestion > 0) {
+                currentQuestion--;
+                renderQuestion(currentQuestion);
+            }
+        });
+
+        document.getElementById('nextBtn').addEventListener('click', () => {
+            if (currentQuestion < TOTAL_QUESTIONS - 1) {
+                currentQuestion++;
+                renderQuestion(currentQuestion);
+            }
+        });
+
+        document.getElementById('submitBtn').addEventListener('click', () => {
+            finishExam();
+        });
+
+        teacherUnlockForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const password = teacherPasswordInput.value;
+
+            if (password !== TEACHER_PASSWORD) {
+                teacherErrorMessage.innerHTML = '<div class="error-message">Contraseña de docente incorrecta.</div>';
+                return;
+            }
+
+            teacherErrorMessage.innerHTML = '';
+            teacherPasswordInput.value = '';
+
+            // Reset for new student attempt
+            currentQuestion = 0;
+            answers = {};
+            timeRemaining = TIMER_DURATION;
+            examStarted = false;
+            studentName = '';
+            timerContainer.classList.remove('warning-5min', 'warning-1min');
+
+            // Ask for student password and name again
+            document.getElementById('errorMessage').innerHTML = '<div class="info-message">Docente desbloqueó el examen. Un alumno puede ahora realizar el intento.</div>';
+            showScreen(initialScreen);
+            studentNameInput.value = '';
+            passwordInput.value = '';
+            studentNameInput.focus();
+        });
+
+        document.getElementById('teacherResultsForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const password = document.getElementById('teacherPasswordResults').value;
+
+            if (password !== TEACHER_PASSWORD) {
+                document.getElementById('teacherResultsErrorMessage').innerHTML = '<div class="error-message">Contraseña de docente incorrecta.</div>';
+                return;
+            }
+
+            document.getElementById('teacherResultsErrorMessage').innerHTML = '';
+            document.getElementById('teacherPasswordResults').value = '';
+
+            // Reset for new attempt
+            currentQuestion = 0;
+            answers = {};
+            timeRemaining = TIMER_DURATION;
+            examStarted = false;
+            studentName = '';
+            timerContainer.classList.remove('warning-5min', 'warning-1min');
+
+            document.getElementById('errorMessage').innerHTML = '<div class="info-message">Docente desbloqueó un nuevo intento del examen.</div>';
+            showScreen(initialScreen);
+            studentNameInput.value = '';
+            passwordInput.value = '';
+            studentNameInput.focus();
+        });
+
+        // INITIALIZATION
+        function initializeApp() {
+            const counter = getAttemptCounter();
+
+            if (counter === 0) {
+                // First visit - show initial screen
+                setAttemptCounter(1);
+                showScreen(initialScreen);
+            } else if (counter === 1) {
+                // First attempt allowed - show initial screen with password
+                showScreen(initialScreen);
+            } else {
+                // Exam already completed - show blocked screen
+                showScreen(blockedScreen);
+            }
+        }
+
+        // Start the app
+        initializeApp();
+    </script>
+</body>
+</html>
